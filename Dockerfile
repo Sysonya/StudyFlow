@@ -1,12 +1,15 @@
-# Шаг 1: Сборка на Java 21
+# Этап 1: Сборка jar-файла
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Копируем проект и собираем его без тестов
-COPY . .
-RUN mvn clean package -DskipTests -Dmaven.test.skip=true
+# Копируем pom.xml и исходный код
+COPY pom.xml .
+COPY src ./src
 
-# Шаг 2: Запуск на Java 21
+# Собираем проект, принудительно пропуская тесты и любые проверки
+RUN mvn package -DskipTests=true -Dmaven.main.skip=false
+
+# Этап 2: Запуск приложения
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
