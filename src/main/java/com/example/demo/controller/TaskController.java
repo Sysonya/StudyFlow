@@ -23,8 +23,6 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    //Створення нового завдання (POST /api/v1/tasks)
-    // Створення нового завдання (POST /api/v1/tasks)
     // Створення нового завдання (POST /api/v1/tasks)
     @PostMapping
     public ResponseEntity<Task> createTask(@Valid @RequestBody TaskCreateRequest request) {
@@ -35,8 +33,9 @@ public class TaskController {
         task.setDueDate(request.getDueDate());
         task.setPriority(request.getPriority());
 
-        // ЗАЛІЗОБЕТОННА ПЕРЕВІРКА:
-        // Якщо в запиті статус є — беремо його. Якщо немає (null) — примусово ставимо TODO прямо тут!
+        // ЗАЛІЗОБЕТОННА ПЕРЕВІРКА СТАТУСУ:
+        // Якщо в Swagger/фронтенді статус вибрали — зберігаємо його.
+        // Якщо поле не передали (null) — примусово ставимо дефолтний TODO.
         if (request.getStatus() != null) {
             task.setStatus(request.getStatus());
         } else {
@@ -44,10 +43,10 @@ public class TaskController {
         }
 
         Task savedTask = taskService.createTask(task);
-        return new ResponseEntity<>(savedTask, HttpStatus.CREATED); // Возвращает 201 Created
+        return new ResponseEntity<>(savedTask, HttpStatus.CREATED); // Повертає 201 Created
     }
 
-    // Отримання списку завдань (GET /api/v1/tasks?status=TODO)
+    // Отримання списку завдань з фільтрацією (GET /api/v1/tasks?status=TODO)
     @GetMapping
     public ResponseEntity<Map<String, Object>> getTasks(@RequestParam(required = false) Status status) {
         List<Task> tasks = taskService.getTasksByStatus(status);
@@ -56,6 +55,6 @@ public class TaskController {
         response.put("tasks", tasks);
         response.put("totalCount", tasks.size());
 
-        return ResponseEntity.ok(response); // Возвращает 200 OK с телом
+        return ResponseEntity.ok(response); // Повертає 200 OK з тілом відповіді
     }
 }
