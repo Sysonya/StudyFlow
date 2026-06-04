@@ -24,6 +24,8 @@ public class TaskController {
     }
 
     //Створення нового завдання (POST /api/v1/tasks)
+    // Створення нового завдання (POST /api/v1/tasks)
+    // Створення нового завдання (POST /api/v1/tasks)
     @PostMapping
     public ResponseEntity<Task> createTask(@Valid @RequestBody TaskCreateRequest request) {
         Task task = new Task();
@@ -32,6 +34,14 @@ public class TaskController {
         task.setSubject(request.getSubject());
         task.setDueDate(request.getDueDate());
         task.setPriority(request.getPriority());
+
+        // ЗАЛІЗОБЕТОННА ПЕРЕВІРКА:
+        // Якщо в запиті статус є — беремо його. Якщо немає (null) — примусово ставимо TODO прямо тут!
+        if (request.getStatus() != null) {
+            task.setStatus(request.getStatus());
+        } else {
+            task.setStatus(Status.TODO);
+        }
 
         Task savedTask = taskService.createTask(task);
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED); // Возвращает 201 Created
