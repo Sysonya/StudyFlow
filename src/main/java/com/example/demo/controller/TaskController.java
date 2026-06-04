@@ -19,15 +19,13 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    // Внедрение сервиса через конструктор (Constructor Injection)
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
-    // Ендпоінт 1: Створення нового завдання (POST /api/v1/tasks)
+    //Створення нового завдання (POST /api/v1/tasks)
     @PostMapping
     public ResponseEntity<Task> createTask(@Valid @RequestBody TaskCreateRequest request) {
-        // Перекладываем данные из DTO в модель базы данных
         Task task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
@@ -39,12 +37,11 @@ public class TaskController {
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED); // Возвращает 201 Created
     }
 
-    // Ендпоінт 2: Отримання списку завдань (GET /api/v1/tasks?status=TODO)
+    // Отримання списку завдань (GET /api/v1/tasks?status=TODO)
     @GetMapping
     public ResponseEntity<Map<String, Object>> getTasks(@RequestParam(required = false) Status status) {
         List<Task> tasks = taskService.getTasksByStatus(status);
 
-        // Формируем обертку JSON в точном соответствии с контрактом из README
         Map<String, Object> response = new HashMap<>();
         response.put("tasks", tasks);
         response.put("totalCount", tasks.size());

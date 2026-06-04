@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.model.Priority;
+import com.example.demo.model.Status;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -15,13 +16,15 @@ public class TaskCreateRequest {
     private String subject;
 
     @NotNull(message = "Дата дедлайну є обов'язковою")
-    @FutureOrPresent(message = "Дата дедлайну не може бути в минулому") // Тест-кейс №2!
+    @FutureOrPresent(message = "Дата дедлайну не може бути в минулому")
     private LocalDateTime dueDate;
 
     @NotNull(message = "Пріоритет є обов'язковим")
     private Priority priority;
 
-    // Геттеры и сеттеры
+    // <-- Добавляем поле статуса с типом твоего Enum
+    private Status status;
+
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 
@@ -36,4 +39,7 @@ public class TaskCreateRequest {
 
     public Priority getPriority() { return priority; }
     public void setPriority(Priority priority) { this.priority = priority; }
+
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 }

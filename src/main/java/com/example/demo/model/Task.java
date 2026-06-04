@@ -29,7 +29,7 @@ public class Task {
 
     private LocalDateTime createdAt;
 
-    // Конструктор по умолчанию (нужен для JPA)
+    // Конструктор по умолчанию
     public Task() {}
 
     // Автоматическая установка даты создания перед сохранением в БД
@@ -41,7 +41,6 @@ public class Task {
         }
     }
 
-    // Геттеры и Сеттеры (чтобы не ставить Lombok, напишем их явно)
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

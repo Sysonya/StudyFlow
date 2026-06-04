@@ -11,13 +11,20 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    // Это и есть Constructor Injection — Spring сам передаст сюда нужный репозиторий
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
-    // Метод для создания новой задачи
+    // ИСПРАВЛЕННЫЙ Метод для создания новой задачи
     public Task createTask(Task task) {
+        // Проверяем: если у пришедшей задачи статус равен null
+        // (то есть в Swagger или фронтенде его не заполнили)
+        if (task.getStatus() == null) {
+            task.setStatus(Status.TODO); // Ставим по умолчанию TODO
+        }
+
+        // Если статус был передан (например, IN_PROGRESS или DONE),
+        // условие выше пропустится, и задача сохранится с твоим статусом!
         return taskRepository.save(task);
     }
 
@@ -26,6 +33,6 @@ public class TaskService {
         if (status != null) {
             return taskRepository.findByStatus(status);
         }
-        return taskRepository.findAll(); // Если статус не указан — вернуть все задачи
+        return taskRepository.findAll();
     }
 }
